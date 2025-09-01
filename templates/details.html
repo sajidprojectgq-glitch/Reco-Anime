@@ -1,0 +1,59 @@
+{% extends "home.html" %}
+
+{% block title %}View{% endblock %}
+
+{% block content %}
+
+<div class="anime-detail">
+  {% for anime in detail %}
+    <!-- Left: Poster -->
+    <div class="anime-poster">
+      <img src="{{ anime.api_data.image_url }}" alt="{{ anime.api_data.title_english or anime.title }}">
+    </div>
+
+    <!-- Right: Info -->
+    <div class="anime-info">
+      <h1 class="anime-title">{{ anime.api_data.title_english or anime.title }}</h1>
+      <p class="anime-synopsis">{{ anime.api_data.synopsis | safe }}</p>
+
+
+      <ul class="anime-meta">
+        <li>
+            <strong class="worth-watch-label">Worth Watch:</strong> 
+            <span class="worth-watch-value">{{ anime.worth_watch }}</span>
+          </li>
+          
+        <li><strong>Source:</strong> {{ anime.api_data.source }}</li>
+        <li><strong>Source:</strong> {{ anime.api_data.mal_id }}</li>
+        <li><strong>Genres:</strong> {{ ", ".join(anime.api_data.genres) }}</li>
+        <li><strong>Status:</strong> {{ anime.api_data.status }}</li>
+        <li><strong>Score:</strong> {{ anime.api_data.score }}</li>
+        <li><strong>Themes:</strong> {{ ", ".join(anime.api_data.themes[:5]) }}</li>
+        <li><strong>Studios:</strong> {{ ", ".join(anime.api_data.studios) }}</li>
+        <li><strong>Season:</strong> {{ anime.api_data.season }}</li>
+      </ul>
+
+      {% if anime.api_data.trailer_url %}
+        <a href="{{ anime.api_data.trailer_url }}" target="_blank" class="trailer-btn">🎬 Watch Trailer</a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+    {% if similar %}
+    <div class="similar-anime">
+    <h2>Similar Anime</h2>
+    <div class="similar-grid">
+        {% for s in similar %}
+        <div class="anime-card">
+            <a href="{{ url_for('details', mal_id=s.api_data.mal_id) }}">
+                <img src="{{ s.api_data.image_url }}" alt="{{ s.api_data.title_english or s.title }}">
+            </a>
+            <h2>{{ s.api_data.title_english or s.title }}</h2>
+        </div>
+        {% endfor %}
+    </div>
+    </div>
+{% endif %}
+
+{% endblock %}
